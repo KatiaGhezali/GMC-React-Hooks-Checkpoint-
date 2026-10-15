@@ -1,24 +1,31 @@
+import { Link } from "react-router-dom";
+
 function MovieCard({ movie }) {
-  const { title, description, posterURL, rating } = movie;
+  const { id, title, description, posterURL, rating } = movie;
 
   return (
-    <article className="movie-card">
-      <img
-        className="movie-poster"
-        src={posterURL}
-        alt={`${title} poster`}
-        loading="lazy"
-      />
+    <Link to={`/movie/${id}`} className="movie-card-link">
+      <article className="movie-card">
+        <img
+          className="movie-poster"
+          src={posterURL}
+          alt={`${title} poster`}
+          loading="lazy"
+        />
 
-      <div className="movie-info">
-        <div className="movie-title-row">
-          <h3>{title}</h3>
-          <span className="movie-rating">★ {rating.toFixed(1)}</span>
+        <div className="movie-info">
+          <div className="movie-title-row">
+            <h3>{title}</h3>
+
+            <span className="movie-rating">★ {Number(rating).toFixed(1)}</span>
+          </div>
+
+          <p className="movie-description">{description}</p>
+
+          <span className="view-details">View details →</span>
         </div>
-
-        <p className="movie-description">{description}</p>
-      </div>
-    </article>
+      </article>
+    </Link>
   );
 }
 

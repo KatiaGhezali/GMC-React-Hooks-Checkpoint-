@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import MovieList from "./components/MovieList";
 import Filter from "./components/Filter";
+import MovieDetails from "./components/MovieDetails";
 import "./App.css";
 
 const initialMovies = [
@@ -12,6 +14,7 @@ const initialMovies = [
     posterURL:
       "https://image.tmdb.org/t/p/w500/oYuLEt3zVCKq57qu2F8dT7NIa6f.jpg",
     rating: 4.8,
+    trailerLink: "https://www.youtube.com/embed/YoHD9XEInc0",
   },
   {
     id: 2,
@@ -21,6 +24,7 @@ const initialMovies = [
     posterURL:
       "https://es.web.img3.acsta.net/pictures/14/10/02/11/07/341344.jpg",
     rating: 4.9,
+    trailerLink: "https://www.youtube.com/embed/zSWdZVtXT7E",
   },
   {
     id: 3,
@@ -30,6 +34,7 @@ const initialMovies = [
     posterURL:
       "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
     rating: 4.7,
+    trailerLink: "https://www.youtube.com/embed/EXeTwQWrcwY",
   },
   {
     id: 4,
@@ -39,20 +44,24 @@ const initialMovies = [
     posterURL:
       "https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg",
     rating: 4.6,
+    trailerLink: "https://www.youtube.com/embed/b9EkMc79ZSU",
   },
 ];
 
-function App() {
-  const [movies, setMovies] = useState(initialMovies);
-
-  const [searchTitle, setSearchTitle] = useState("");
-  const [minRating, setMinRating] = useState(0);
-
+function HomePage({
+  movies,
+  setMovies,
+  searchTitle,
+  setSearchTitle,
+  minRating,
+  setMinRating,
+}) {
   const [newMovie, setNewMovie] = useState({
     title: "",
     description: "",
     posterURL: "",
     rating: "3",
+    trailerLink: "",
   });
 
   const handleInputChange = (event) => {
@@ -73,6 +82,7 @@ function App() {
       description: newMovie.description.trim(),
       posterURL: newMovie.posterURL.trim(),
       rating: Number(newMovie.rating),
+      trailerLink: newMovie.trailerLink.trim(),
     };
 
     setMovies((previousMovies) => [...previousMovies, movieToAdd]);
@@ -82,6 +92,7 @@ function App() {
       description: "",
       posterURL: "",
       rating: "3",
+      trailerLink: "",
     });
   };
 
@@ -164,6 +175,19 @@ function App() {
             </select>
           </div>
 
+          <div className="form-group">
+            <label htmlFor="trailerLink">Trailer Embed URL</label>
+            <input
+              id="trailerLink"
+              name="trailerLink"
+              type="url"
+              placeholder="https://www.youtube.com/embed/..."
+              value={newMovie.trailerLink}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
           <button type="submit" className="add-button">
             Add Movie
           </button>
@@ -195,6 +219,42 @@ function App() {
 
       <footer className="app-footer">Made for movie lovers.</footer>
     </main>
+  );
+}
+
+function App() {
+  const [movies, setMovies] = useState(initialMovies);
+  const [searchTitle, setSearchTitle] = useState("");
+  const [minRating, setMinRating] = useState(0);
+
+  return (
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <HomePage
+            movies={movies}
+            setMovies={setMovies}
+            searchTitle={searchTitle}
+            setSearchTitle={setSearchTitle}
+            minRating={minRating}
+            setMinRating={setMinRating}
+          />
+        }
+      />
+
+      <Route path="/movie/:id" element={<MovieDetails movies={movies} />} />
+
+      <Route
+        path="*"
+        element={
+          <div className="not-found">
+            <h1>Page not found</h1>
+            <a href="/">Return to the home page</a>
+          </div>
+        }
+      />
+    </Routes>
   );
 }
 
